@@ -1,64 +1,46 @@
 type ValueStack = number[];
 
-export class Sum {
+abstract class BinaryOperation {
   doIt(stack: ValueStack): ValueStack {
     try {
       if (stack.length < 2) {
         throw new Error('Not enough stack elements');
       }
       const [x, y, ...rest] = stack;
-      const result = x + y;
+      const result = this.doOperation(x, y);
       return [result, ...rest];
     } catch (error) {
       return stack;
     }
   }
+
+  abstract doOperation(x: number, y: number): number;
 }
 
-export class Subtract {
-  doIt(stack: ValueStack): ValueStack {
-    try {
-      if (stack.length < 2) {
-        throw new Error('Not enough stack elements');
-      }
-      const [x, y, ...rest] = stack;
-      const result = x - y;
-      return [result, ...rest];
-    } catch (error) {
-      return stack;
-    }
+
+export class Sum extends BinaryOperation {
+  doOperation(x: number, y: number): number {
+    return x + y;
   }
 }
 
-export class Multiply {
-  doIt(stack: ValueStack): ValueStack {
-    try {
-      if (stack.length < 2) {
-        throw new Error('Not enough stack elements');
-      }
-      const [x, y, ...rest] = stack;
-      const result = x * y;
-      return [result, ...rest];
-    } catch (error) {
-      return stack;
-    }
+export class Subtract extends BinaryOperation{
+  doOperation(x: number, y: number): number {
+    return x - y;
   }
 }
 
-export class Divide {
-  doIt(stack: ValueStack): ValueStack {
-    try {
-      if (stack.length < 2) {
-        throw new Error('Not enough stack elements');
-      }
-      const [x, y, ...rest] = stack;
-      if (y === 0) {
-        throw new Error('Divide by zero');
-      }
-      const result = x / y;
-      return [result, ...rest];
-    } catch (error) {
-      return stack;
+export class Multiply extends BinaryOperation{
+  doOperation(x: number, y: number): number {
+    return x * y;
+  }
+}
+
+export class Divide extends BinaryOperation{
+  doOperation(x: number, y: number): number {
+    if (y === 0) {
+      throw new Error('Divide by zero');
     }
+    return x / y;
   }
 }
